@@ -1,11 +1,6 @@
 FROM alpine:edge
 
-RUN cat > /etc/apk/repositories << EOF; $(echo)
-    https://dl-cdn.alpinelinux.org/alpine/v$(cut -d'.' -f1,2 /etc/alpine-release)/main/
-    https://dl-cdn.alpinelinux.org/alpine/v$(cut -d'.' -f1,2 /etc/alpine-release)/community/
-    https://dl-cdn.alpinelinux.org/alpine/edge/testing/
-    EOF \
-    && apk update
+RUN echo -e "https://dl-cdn.alpinelinux.org/alpine/v$(cut -d'.' -f1,2 /etc/alpine-release)/main\nhttps://dl-cdn.alpinelinux.org/alpine/v$(cut -d'.' -f1,2 /etc/alpine-release)/community\nhttps://dl-cdn.alpinelinux.org/alpine/edge/testing" > /etc/apk/repositories && apk update
 
 RUN set -eu && \
     apk --no-cache add \
