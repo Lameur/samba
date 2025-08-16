@@ -1,11 +1,20 @@
 FROM alpine:edge
 
+RUN cat > /etc/apk/repositories << EOF; $(echo)
+    https://dl-cdn.alpinelinux.org/alpine/v$(cut -d'.' -f1,2 /etc/alpine-release)/main/
+    https://dl-cdn.alpinelinux.org/alpine/v$(cut -d'.' -f1,2 /etc/alpine-release)/community/
+    https://dl-cdn.alpinelinux.org/alpine/edge/testing/
+    EOF \
+    && apk update
+
 RUN set -eu && \
     apk --no-cache add \
     tini \
     bash \
     samba \
     tzdata \
+    avahi \
+    wsdd \
     shadow && \
     addgroup -S smb && \
     rm -f /etc/samba/smb.conf && \
@@ -15,7 +24,7 @@ COPY --chmod=755 samba.sh /usr/bin/samba.sh
 COPY --chmod=664 smb.conf /etc/samba/smb.default
 
 VOLUME /storage
-EXPOSE 139 445
+EXPOSE 139 445 5353 53791 3702 5357
 
 ENV NAME="Data"
 ENV USER="samba"
